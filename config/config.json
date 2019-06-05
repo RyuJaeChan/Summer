@@ -1,0 +1,25 @@
+{
+  "version" : "",
+
+  "controller" : [
+    "UserController"
+  ],
+
+  "service" : [
+    "UserService"
+  ],
+
+  "database" : {
+    "url" : "mysql:host=127.0.0.1:3306;dbname=world_of_renaissance;charset=utf8",
+    "id" : "dev_test",
+    "password": "zjaZJA123!"
+  },
+
+  "cache" : "memcached",
+
+  "encryption" : false,
+
+  "logger" : "scribe",
+
+  "performance" : false
+}

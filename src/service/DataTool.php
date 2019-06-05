@@ -2,7 +2,7 @@
 
 namespace wor\service;
 
-use wor\lib\database\SqlExecutor;
+use wor\lib\database\SQLExecutor;
 
 class DataTool
 {
@@ -30,19 +30,6 @@ class DataTool
             )
         VALUES (?,?,?,?,?,?,?,?);';
 
-    const INSERT_RESOURCE_INFO =
-        "INSERT INTO resource_info(
-            id
-            , type
-            , name
-            , description
-            , output
-            , building_id
-        )
-        VALUES (?,?,?,?,?,?); ";
-
-
-
     const INSERT_BUILDING_INFO =
         "INSERT INTO building_info(
             id
@@ -55,7 +42,6 @@ class DataTool
             , strategy_resource
             )
          VALUES (?,?,?,?,?,?,?,?);";
-
 
     const INSERT_BUILDING_UPGRADE_INFO =
         "INSERT INTO building_upgrade_info(
@@ -71,6 +57,17 @@ class DataTool
           )
           VALUE(?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
+
+    const INSERT_RESOURCE_INFO =
+        "INSERT INTO resource_info(
+            id
+            , type
+            , name
+            , description
+            , output
+            , building_id
+        )
+        VALUES (?,?,?,?,?,?); ";
 
     const INSERT_WEAPON_INFO =
         "INSERT INTO weapon_info(
@@ -148,7 +145,7 @@ class DataTool
                 continue;
             }
 
-            $res = SqlExecutor::executeUpdate(
+            $res = SQLExecutor::executeUpdate(
                 $sql,
                 array_splice($info, 0, $arrSize)
             );

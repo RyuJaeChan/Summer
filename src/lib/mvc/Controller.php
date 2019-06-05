@@ -15,14 +15,6 @@ abstract class Controller
     private $reqContext;
 
     /**
-     * Controller constructor.
-     * - 자식 클래스에서 생성자 호출 방지
-     */
-    final public function __construct()
-    {
-    }
-
-    /**
      * - request context 반환
      *
      * @return RequestContext

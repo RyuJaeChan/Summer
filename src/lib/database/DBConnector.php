@@ -2,6 +2,9 @@
 
 namespace wor\lib\database;
 
+use wor\lib\config\Configuration;
+use wor\lib\container\Container;
+
 /**
  * Class DBConnector
  *
@@ -9,7 +12,7 @@ namespace wor\lib\database;
  */
 class DBConnector
 {
-    private static $instance = null;
+    #private static $instance = null;
     private static $conn = null;
 
     private $dbUrl;
@@ -18,20 +21,22 @@ class DBConnector
 
     /**
      * DBConnector constructor.
+     *
+     * @param Configuration $config
      */
-    protected function __construct()
+    public function __construct()
     {
-        $config = require __DIR__ . "/../../config/database.php";
+        $config = Container::getInstance()->get(Configuration::class);
+        $dbInfo = $config->getDbInfo();
 
-        $this->dbUrl = $config["dbUrl"];
-        $this->userId = $config["userId"];
-        $this->userPassword = $config["userPassword"];
+        $this->dbUrl        = $dbInfo["url"];
+        $this->userId       = $dbInfo["id"];
+        $this->userPassword = $dbInfo["password"];
 
         self::$conn = new \PDO(
             $this->dbUrl,
             $this->userId,
-            $this->userPassword,
-            array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+            $this->userPassword
         );
     }
 
@@ -40,9 +45,10 @@ class DBConnector
      */
     public static function getConnection()
     {
+        /*
         if (self::$instance == null) {
             self::$instance = new static;
-        }
+        }*/
 
         return self::$conn;
     }

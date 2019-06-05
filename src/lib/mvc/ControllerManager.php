@@ -2,6 +2,7 @@
 
 namespace wor\lib\mvc;
 
+use wor\lib\container\Container;
 use wor\lib\router\RequestContext;
 use wor\lib\router\ResponseContext;
 use wor\lib\exception\ServerException;
@@ -33,7 +34,10 @@ class ControllerManager
 
             foreach ($controllerList as $className) {
                 $class = $namespace . $className;
-                $controller = new $class;
+
+                #container에서 가져오도록 수정해야하지 않을까????
+                #$controller = new $class;
+                $controller = Container::getInstance()->get($class);
 
                 if ($controller instanceof Controller) {
                     $this->register($controller);

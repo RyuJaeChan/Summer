@@ -1,22 +1,39 @@
 <?php
 
-class User
+namespace wor\entity;
+
+use wor\lib\mvc\Entity;
+
+/**
+ * Class User
+ * @package wor\entity
+ *
+ * @table("user")
+ */
+class User extends Entity
 {
-    private $hiveUid;
+    /**
+     * @id
+     */
+    private $id;
     private $hiveId;
     private $name;
-    private $currPopulation;
-    private $maxPopulation;
+    private $userDataId;
     private $lastLoginTime;
 
-    public function getHiveUid()
+    /**
+     * @ref("user_data")
+     */
+    #private $userData;
+
+    public function getId()
     {
-        return $this->hiveUid;
+        return $this->id;
     }
 
-    public function setHiveUid($hiveUid)
+    public function setId($id)
     {
-        $this->hiveUid = $hiveUid;
+        $this->id = $id;
     }
 
     public function getHiveId()
@@ -28,4 +45,50 @@ class User
     {
         $this->hiveId = $hiveId;
     }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getLastLoginTime()
+    {
+        return $this->lastLoginTime;
+    }
+
+    public function setLastLoginTime($lastLoginTime)
+    {
+        $this->lastLoginTime = $lastLoginTime;
+    }
+
+    public function getUserDataId()
+    {
+        return $this->userDataId;
+    }
+
+    public function setUserDataId($userDataId)
+    {
+        $this->userDataId = $userDataId;
+    }
+
+
+    /**
+     * @return mixed
+    public function getUserData()
+    {
+        return $this->userData;
+    }
+
+    /**
+     * @param mixed $userData
+    public function setUserData($userData)
+    {
+        $this->userData = $userData;
+    }
+    */
 }

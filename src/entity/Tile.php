@@ -17,6 +17,7 @@ class Tile extends Entity
     private $y;
     private $buildingId;
     private $resourceId;
+    private $lastMiningTime;
 
     /**
      * @return mixed
@@ -112,5 +113,21 @@ class Tile extends Entity
     public function setResourceId($resourceId)
     {
         $this->resourceId = $resourceId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastMiningTime()
+    {
+        return $this->lastMiningTime;
+    }
+
+    /**
+     * @param mixed $lastMiningTime
+     */
+    public function setLastMiningTime($lastMiningTime)
+    {
+        $this->lastMiningTime = $lastMiningTime;
     }
 }

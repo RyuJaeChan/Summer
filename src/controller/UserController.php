@@ -11,6 +11,14 @@ use wor\service\UserService;
  */
 class UserController extends Controller
 {
+    private $userService;
+
+    public function __construct(
+        UserService $userService
+    ) {
+        $this->userService = $userService;
+    }
+
     /**
      * @GetMapping(url="/index")
      */
@@ -27,8 +35,7 @@ class UserController extends Controller
         # DB 로그인 요청
         $reqJson = $this->getRequestContext()->getBody();
 
-        $userService = new UserService();
-        $ret = $userService->login(
+        $ret = $this->userService->login(
             $reqJson->hiveId,
             $reqJson->name
         );
@@ -58,10 +65,9 @@ class UserController extends Controller
      */
     public function getTileInfo($territoryId)
     {
-        $userService = new UserService();
         return ResponseJson::builder()
             ->setResult(ResponseJson::SUCCESS)
-            ->setBody($userService->getTiles($territoryId))
+            ->setBody($this->userService->getTiles($territoryId))
             ->build();
     }
 }

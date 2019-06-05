@@ -2,6 +2,7 @@
 
 namespace wor\lib\database;
 
+use wor\lib\container\Container;
 use wor\lib\exception\ServerException;
 use wor\lib\mvc\Entity;
 
@@ -74,12 +75,24 @@ class SQLExecutor
                 $errorMsg = $stmt->errorCode() . "[" . $stmt->queryString ."] : " . implode(" ", $stmt->errorInfo());
                 throw new ServerException($errorMsg, 2);
             }
+
         } catch (\PDOException $e) {
             $errorMsg = $e->getCode() . " : " . $e->getMessage();
             throw new ServerException($errorMsg, 3);
         }
 
-        return $res;
+        return $stmt->rowCount();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getLastInsertId()
+    {
+        return Container::getInstance()
+            ->get(DBConnector::class)
+            ->getConnection()
+            ->lastInsertId();
     }
 
     /**
@@ -91,8 +104,43 @@ class SQLExecutor
      */
     private static function getPreparedState(string $sql): \PDOStatement
     {
-        $conn = DBConnector::getConnection();
+        $conn = Container::getInstance()->get(DBConnector::class)->getConnection();
         return $conn->prepare($sql);
     }
 
+    public static function insertEntity(Entity $entity)
+    {
+        $sql = $entity->getInsertSQL();
+
+        $stmt = self::getPreparedState($sql);
+        $ret = $stmt->execute();
+
+        # autoincrement id값 가져온다.
+        if (method_exists($entity, "getId")) {
+            $entity->setId(self::getLastInsertId());
+        }
+
+        return $ret;
+    }
+
+    public static function selectEntity(Entity &$entity, string $param = null)
+    {
+        $sql = $entity->getSelectSQL($param);
+        var_dump($sql);
+
+        try {
+            $stmt = self::getPreparedState($sql);
+            $stmt->execute();
+
+            $row = $stmt->fetch(\PDO::FETCH_OBJ);
+
+            foreach ($row as $column => $value) {
+                $entity->setColmValue($column, $value);
+            }
+
+        } catch (\Exception $e) {
+            $errorMsg = $e->getCode() . " : " . $e->getMessage();
+            throw new ServerException($errorMsg, 3);
+        }
+    }
 }
