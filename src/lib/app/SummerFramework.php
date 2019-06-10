@@ -43,22 +43,38 @@ class SummerFramework
      *
      * @param string $url
      * @param string $method
-     * @param string $configFile
      */
-    public function run(string $url, string $method, string $configFile)
+    public function run(string $url, string $method)
     {
         # 여기다가 성능측정이랑 그런걸 넣어줘야하지안흥ㄹ까???????
         # 성능측정
         # 암호화
         # 또?
 
-
-        $req = new RequestContext($url, $method);
-        $res = new ResponseContext();
+        #$req = new RequestContext($url, $method);
+        #$res = new ResponseContext();
+        $req = Container::getInstance()->get(RequestContext::class, $url, $method);
+        $res = Container::getInstance()->get(ResponseContext::class);
 
         try {
             $this->controllerManager->loadControllers(__ROOT__ . "/src/config/controller.php");
+            /*
+            #run modules ...
+            $beforeModules = Container::getInstance()->get(BeforeModule);
+            foreach ($beforeModules as $module) {
+                $module->handle($req, $res);
+            }
+            */
+
             Router::route($req, $res, $this->controllerManager->getMapper());
+
+            /*
+            #run after modules ...
+            $afterModules = Container::getInstance()->get(BeforeModule);
+            foreach ($afterModules as $module) {
+                $module->handle($req, $res);
+            }
+            */
         } catch (ServerException $e) {
             $resBody = JsonBuilder::builder()
                 ->setResult(0)
@@ -70,8 +86,7 @@ class SummerFramework
             # trigger_error("my trigger error", E_USER_ERROR);
             var_dump($e);
             exit(1);
-        }
-        finally {
+        } finally {
 
         }
         $res->send();

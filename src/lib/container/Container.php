@@ -18,19 +18,19 @@ class Container
      */
     private $instances = array();
 
-    public function get(string $class)
+    public function get(string $class, array $constructParam = null)
     {
         if (isset($this->instances[$class])) {
             return $this->instances[$class];
         }
 
-        $instance = $this->make($class);
+        $instance = $this->make($class, $constructParam);
 
         $this->instances[$class] = $instance;
         return $instance;
     }
 
-    private function make(string $class)
+    private function make(string $class, array $constructParam = null)
     {
         try {
             $reflectClass = new \ReflectionClass($class);
@@ -44,12 +44,12 @@ class Container
             return new $class;
         }
 
-        $dependencies = $constructor->getParameters();
+        if (!$constructParam) {
+            $dependencies = $constructor->getParameters();
+            $constructParam = $this->resolveParam($dependencies);
+        }
 
-        $param = $this->resolveParam($dependencies);
-
-
-        return $reflectClass->newInstanceArgs($param);
+        return $reflectClass->newInstanceArgs($constructParam);
     }
 
     private function resolveParam(array $dependencies)
